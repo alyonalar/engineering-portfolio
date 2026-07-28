@@ -1,0 +1,25 @@
+2026-05-22 13:38:15,348 | INFO | main | Bot is starting...
+2026-05-22 13:38:15,364 | INFO | main | Database initialized successfully
+2026-05-22 13:38:15,365 | INFO | main | Start polling...
+2026-05-22 13:40:40,936 | INFO | process_user_doc | User A sent personal file: questions.docx
+2026-05-22 13:40:41,243 | INFO | process_user_doc | User file downloaded to: uploads\A_questions.docx
+2026-05-22 13:40:41,402 | INFO | parse_docx_questions | Started parsing file: uploads\A_questions.docx
+2026-05-22 13:40:41,431 | INFO | parse_docx_questions | Non-empty lines extracted: 134
+2026-05-22 13:40:41,431 | INFO | parse_docx_questions | Parsing finished successfully, total questions: 19
+2026-05-22 13:40:41,432 | INFO | process_user_doc | User A file parsed successfully, questions count: 19
+2026-05-22 13:40:41,437 | INFO | process_user_doc | User A questions inserted into database: 19
+2026-05-22 13:40:46,012 | INFO | start_test_handler | User A started test flow
+2026-05-22 13:40:49,020 | INFO | choose_mode_callback | User A selected mode: global
+2026-05-22 13:40:51,815 | INFO | count_all_callback | User A chose all questions, available count: 19
+2026-05-22 13:40:51,816 | INFO | __init__ | QuizSession created with 19 questions
+2026-05-22 13:40:51,935 | INFO | next_question | Next question issued: question_id=19, step=1
+2026-05-22 13:40:55,156 | INFO | answer_callback | User A answered: A
+2026-05-22 13:40:55,156 | INFO | answer | Correct answer for question_id=19
+2026-05-22 13:41:03,758 | INFO | answer_callback | User A answered: C
+2026-05-22 13:41:03,758 | WARNING | answer | Wrong answer for question_id=2, delayed until step 13
+2026-05-22 13:41:03,759 | WARNING | answer_callback | User A answered incorrectly for question_id=2, correct=B
+2026-05-22 13:41:05,276 | INFO | stop_quiz_callback | User A stopped quiz manually
+2026-05-22 13:41:05,385 | INFO | stop_quiz_callback | Quiz finished for user A: solved=2, correct=1, wrong=1
+2026-05-22 13:42:07,491 | INFO | process_user_doc | User A sent personal file: unsupported.txt
+2026-05-22 13:42:07,592 | WARNING | process_user_doc | User A sent invalid personal file type: unsupported.txt
+2026-05-22 13:42:28,040 | ERROR | _listen_updates | Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected

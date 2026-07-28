@@ -1,0 +1,323 @@
+{
+  "info": {
+    "_postman_id": "301f608c-0fe4-4d1a-ad9d-08bd6bc2d0fa",
+    "name": "JSONPlaceholder Posts Regression",
+    "description": "A linked regression scenario for filtering, reading, creating, updating, deleting, and requesting a missing post.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "01 — List posts for selected user",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", () => {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Response is JSON\", () => {",
+              "    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+              "});",
+              "",
+              "pm.test(\"Filter and post contract are respected\", () => {",
+              "    const expectedUserId = Number(pm.collectionVariables.get(\"user_id\"));",
+              "    const posts = pm.response.json();",
+              "",
+              "    pm.expect(posts).to.be.an(\"array\").that.is.not.empty;",
+              "    posts.forEach((post) => {",
+              "        pm.expect(post).to.include.all.keys(\"userId\", \"id\", \"title\", \"body\");",
+              "        pm.expect(post.userId).to.eql(expectedUserId);",
+              "        pm.expect(post.id).to.be.a(\"number\");",
+              "        pm.expect(post.title).to.be.a(\"string\").and.not.empty;",
+              "        pm.expect(post.body).to.be.a(\"string\").and.not.empty;",
+              "    });",
+              "",
+              "    const ids = posts.map((post) => post.id);",
+              "    pm.expect(new Set(ids).size).to.eql(ids.length);",
+              "    pm.collectionVariables.set(\"selected_post_id\", String(posts[0].id));",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "description": "Checks server-side filtering and stores the first returned id for the following requests.",
+        "url": {
+          "raw": "{{base_url}}/posts?userId={{user_id}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "posts"
+          ],
+          "query": [
+            {
+              "key": "userId",
+              "value": "{{user_id}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "02 — Read selected post",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", () => {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Response matches the selected post\", () => {",
+              "    const post = pm.response.json();",
+              "    pm.expect(post.id).to.eql(Number(pm.collectionVariables.get(\"selected_post_id\")));",
+              "    pm.expect(post.userId).to.eql(Number(pm.collectionVariables.get(\"user_id\")));",
+              "    pm.expect(post).to.include.all.keys(\"userId\", \"id\", \"title\", \"body\");",
+              "    pm.expect(post.title.trim()).to.have.length.above(0);",
+              "    pm.expect(post.body.trim()).to.have.length.above(0);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "description": "Uses the id saved by the list request instead of relying on a hard-coded resource.",
+        "url": {
+          "raw": "{{base_url}}/posts/{{selected_post_id}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "posts",
+            "{{selected_post_id}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "03 — Create post",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 201\", () => {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "",
+              "pm.test(\"Response echoes submitted data and assigns an id\", () => {",
+              "    const post = pm.response.json();",
+              "    pm.expect(post.title).to.eql(pm.collectionVariables.get(\"new_post_title\"));",
+              "    pm.expect(post.body).to.eql(pm.collectionVariables.get(\"new_post_body\"));",
+              "    pm.expect(post.userId).to.eql(Number(pm.collectionVariables.get(\"user_id\")));",
+              "    pm.expect(post.id).to.be.a(\"number\");",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"{{new_post_title}}\",\n  \"body\": \"{{new_post_body}}\",\n  \"userId\": {{user_id}}\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "description": "Checks the create response contract and verifies that submitted values are not changed.",
+        "url": {
+          "raw": "{{base_url}}/posts",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "posts"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "04 — Update selected post title",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", () => {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"PATCH changes the title and preserves the resource identity\", () => {",
+              "    const post = pm.response.json();",
+              "    pm.expect(post.id).to.eql(Number(pm.collectionVariables.get(\"selected_post_id\")));",
+              "    pm.expect(post.userId).to.eql(Number(pm.collectionVariables.get(\"user_id\")));",
+              "    pm.expect(post.title).to.eql(pm.collectionVariables.get(\"updated_title\"));",
+              "    pm.expect(post.body).to.be.a(\"string\").and.not.empty;",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"{{updated_title}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "description": "Checks partial update semantics: the id and untouched fields remain consistent.",
+        "url": {
+          "raw": "{{base_url}}/posts/{{selected_post_id}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "posts",
+            "{{selected_post_id}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "05 — Delete selected post",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", () => {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Response body is an empty JSON object\", () => {",
+              "    pm.expect(pm.response.json()).to.deep.equal({});",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "description": "Checks the delete response for the resource selected at the beginning of the run.",
+        "url": {
+          "raw": "{{base_url}}/posts/{{selected_post_id}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "posts",
+            "{{selected_post_id}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "06 — Read missing post",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 404\", () => {",
+              "    pm.response.to.have.status(404);",
+              "});",
+              "",
+              "pm.test(\"Response body is an empty JSON object\", () => {",
+              "    pm.expect(pm.response.json()).to.deep.equal({});",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "description": "Checks the API contract for a resource id outside the available data set.",
+        "url": {
+          "raw": "{{base_url}}/posts/999999",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "posts",
+            "999999"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "https://jsonplaceholder.typicode.com",
+      "type": "string"
+    },
+    {
+      "key": "user_id",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "selected_post_id",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "new_post_title",
+      "value": "QA regression draft",
+      "type": "string"
+    },
+    {
+      "key": "new_post_body",
+      "value": "Created during the Postman collection run",
+      "type": "string"
+    },
+    {
+      "key": "updated_title",
+      "value": "QA regression draft — updated",
+      "type": "string"
+    }
+  ]
+}
