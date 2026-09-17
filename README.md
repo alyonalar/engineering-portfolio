@@ -54,6 +54,7 @@ Telegram-бот для поддержки учебного сообщества.
 - [15 API-тест-кейсов](https://github.com/alyonalar/medical-app-manual-testing/blob/main/docs/06-api-test-cases.md)
 - [Чек-листы](https://github.com/alyonalar/medical-app-manual-testing/blob/main/docs/04-checklists.md)
 - [Реестр из 48 дефектов](https://github.com/alyonalar/medical-app-manual-testing/blob/main/bugs/README.md)
+
 ### Telegram quiz bot
 
 Кейс построен вокруг собственного Telegram-бота, который принимает `.docx` с вопросами и проводит тестирование. Персональные данные в примерах удалены.
