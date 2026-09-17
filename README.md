@@ -10,6 +10,7 @@
 
 | Проект | Основной фокус | Что можно посмотреть |
 | --- | --- | --- |
+| [Medical App Manual Testing](https://github.com/alyonalar/medical-app-manual-testing) | Ручное тестирование медицинского веб-приложения | тест-план, 115 тест-кейсов, чек-листы, API-проверки и 48 баг-репортов |
 | [Telegram Support Knowledge System](https://github.com/alyonalar/telegram-support-knowledge-system) | Telegram-поддержка и база знаний | pgvector-поиск, роли, конкурентные операции, резервное копирование |
 | [Anti-Leak Education Platform](https://github.com/alyonalar/anti-leak-education-platform) | Персонализированная выдача документов | фоновые задачи, DOCX-маркеры, OCR и атрибуция утечек |
 | [Document Intelligence Platform](https://github.com/alyonalar/document-intelligence-platform) | Локальный анализ документов | извлечение данных, поиск, сравнение, QA и экспорт |
@@ -44,6 +45,15 @@ Telegram-бот для поддержки учебного сообщества.
 
 ## QA-практика
 
+### [Medical App Manual Testing](https://github.com/alyonalar/medical-app-manual-testing)
+
+Полный цикл ручного тестирования медицинского веб-приложения: от планирования и пользовательских сценариев до API-проверок, баг-репортов и итогового решения о готовности.
+
+- [Тест-план](https://github.com/alyonalar/medical-app-manual-testing/blob/main/docs/01-test-plan.md)
+- [100 UI/функциональных тест-кейсов](https://github.com/alyonalar/medical-app-manual-testing/blob/main/docs/03-test-cases.md)
+- [15 API-тест-кейсов](https://github.com/alyonalar/medical-app-manual-testing/blob/main/docs/06-api-test-cases.md)
+- [Чек-листы](https://github.com/alyonalar/medical-app-manual-testing/blob/main/docs/04-checklists.md)
+- [Реестр из 48 дефектов](https://github.com/alyonalar/medical-app-manual-testing/blob/main/bugs/README.md)
 ### Telegram quiz bot
 
 Кейс построен вокруг собственного Telegram-бота, который принимает `.docx` с вопросами и проводит тестирование. Персональные данные в примерах удалены.
